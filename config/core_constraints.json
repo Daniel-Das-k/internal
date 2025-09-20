@@ -1,0 +1,141 @@
+{
+  "core_constraints": {
+    "course_constraints": [
+      {
+        "id": "CC001",
+        "name": "ltpc_requirements",
+        "description": "LTPC (Lecture, Tutorial, Practical, Credit) hour requirements per course",
+        "type": "hard_constraint",
+        "category": "academic_requirement",
+        "priority": "critical",
+        "parameters": {
+          "lecture_hours_required": "as_per_syllabus",
+          "tutorial_hours_required": "as_per_syllabus",
+          "practical_hours_required": "as_per_syllabus",
+          "grouping": "semester_wise"
+        },
+        "implementation": "Group courses by semester first, then ensure adequate hours assigned"
+      },
+      {
+        "id": "CC002",
+        "name": "semester_grouping",
+        "description": "Courses must be grouped by semester before scheduling",
+        "type": "hard_constraint",
+        "category": "academic_policy",
+        "priority": "critical",
+        "parameters": {
+          "grouping_method": "semester_wise",
+          "validation": "all_courses_grouped_before_scheduling"
+        },
+        "implementation": "First group courses by semester, then apply LTPC constraints"
+      }
+    ],
+
+    "teacher_constraints": [
+      {
+        "id": "TC001",
+        "name": "teacher_subject_assignment",
+        "description": "Assign proper teacher for each subject according to data",
+        "type": "hard_constraint",
+        "category": "resource_allocation",
+        "priority": "critical",
+        "parameters": {
+          "assignment_method": "data_driven",
+          "validation": "teacher_qualification_match"
+        },
+        "implementation": "First assign teacher for each subject with proper assignment given according to data"
+      },
+      {
+        "id": "TC002",
+        "name": "max_21_hour_workweek",
+        "description": "Maximum 21 work hours per week per teacher",
+        "type": "hard_constraint",
+        "category": "teacher_welfare",
+        "priority": "critical",
+        "parameters": {
+          "max_hours_per_week": 21,
+          "calculation_method": "total_teaching_hours",
+          "enforcement": "strict"
+        },
+        "implementation": "Track and limit total weekly teaching hours to 21 maximum"
+      },
+      {
+        "id": "TC003",
+        "name": "no_teacher_time_overlap",
+        "description": "No overlapping time assignments for any teacher",
+        "type": "hard_constraint",
+        "category": "conflict_prevention",
+        "priority": "critical",
+        "parameters": {
+          "overlap_tolerance": 0,
+          "check_granularity": "time_slot_level",
+          "enforcement": "zero_tolerance"
+        },
+        "implementation": "Ensure no teacher is assigned to multiple classes at same time"
+      }
+    ],
+
+    "room_constraints": [
+      {
+        "id": "RC001",
+        "name": "lab_room_constraints",
+        "description": "Laboratory room allocation and usage constraints",
+        "type": "hard_constraint",
+        "category": "resource_allocation",
+        "priority": "critical",
+        "parameters": {
+          "room_type": "laboratory",
+          "capacity": 70,
+          "equipment_requirements": "lab_specific",
+          "no_overlap": true
+        },
+        "implementation": "Allocate lab rooms for practical sessions with proper equipment"
+      },
+      {
+        "id": "RC002",
+        "name": "classroom_constraints",
+        "description": "Classroom allocation and usage constraints",
+        "type": "hard_constraint",
+        "category": "resource_allocation",
+        "priority": "critical",
+        "parameters": {
+          "room_type": "classroom",
+          "capacity": 70,
+          "usage": "lecture_tutorial",
+          "no_overlap": true
+        },
+        "implementation": "Allocate classrooms for lectures and tutorials"
+      },
+      {
+        "id": "RC003",
+        "name": "no_room_overlap",
+        "description": "No two classes in same room at same time",
+        "type": "hard_constraint",
+        "category": "conflict_prevention",
+        "priority": "critical",
+        "parameters": {
+          "overlap_tolerance": 0,
+          "room_capacity": 70,
+          "student_limit": 70,
+          "enforcement": "strict"
+        },
+        "implementation": "Prevent double booking of any room at any given time instance"
+      }
+    ]
+  },
+
+  "constraint_summary": {
+    "total_constraints": 6,
+    "course_constraints": 2,
+    "teacher_constraints": 3,
+    "room_constraints": 3,
+    "all_hard_constraints": true,
+    "priority_critical": 6,
+    "notes": [
+      "All rooms considered 70 capacity",
+      "Each teacher-course assignment handles 70 students",
+      "Semester grouping must happen first",
+      "All constraints are hard constraints (no soft constraints)"
+    ]
+  }
+}
